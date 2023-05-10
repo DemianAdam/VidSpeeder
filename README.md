@@ -21,7 +21,8 @@ That's it! VidSpeeder should now be installed and ready to use.
 ## How to Use
 To use VidSpeeder, simply go to any YouTube video and click the play button. Once the video starts playing, you can use the following keyboard shortcuts to adjust the playback speed:
 
-Alt + . **(*Period*)**: Increase playback speed by 0.25x.
-Alt + , **(*Comma*)**: Decrease playback speed by 0.25x.
-Alt + - **(*Slash*)**: Reset playback speed to 1x.
+- Alt + . **(*Period*)**: Increase playback speed by 0.25x.
+- Alt + , **(*Comma*)**: Decrease playback speed by 0.25x.
+- Alt + - **(*Slash*)**: Reset playback speed to 1x.
+- 
 You can also use the speed slider that appears when you click on the settings (gear) icon in the video player. Note that the slider is limited to the maximum and minimum speed settings supported by YouTube.
