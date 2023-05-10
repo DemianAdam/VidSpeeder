@@ -27,3 +27,10 @@ To use VidSpeeder, simply go to any YouTube video and click the play button. Onc
 - Alt + - **(*Hyphen*)**: Reset playback speed to 1x.
 
 You can also use the speed slider that appears when you click on the settings (gear) icon in the video player. Note that the slider is limited to the maximum and minimum speed settings supported by YouTube.
+
+## License
+VidSpeeder is released under the terms of the GNU General Public License v3.0. This means that you are free to use, modify, and distribute VidSpeeder, as long as you comply with the terms of the license.
+
+The full text of the license can be found in the LICENSE file included in this repository.
+
+If you find VidSpeeder helpful, I would appreciate it if you would give me credit by linking to this GitHub repository.
