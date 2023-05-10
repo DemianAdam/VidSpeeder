@@ -31,6 +31,6 @@ You can also use the speed slider that appears when you click on the settings (g
 ## License
 VidSpeeder is released under the terms of the GNU General Public License v3.0. This means that you are free to use, modify, and distribute VidSpeeder, as long as you comply with the terms of the license.
 
-The full text of the license can be found in the LICENSE file included in this repository.
+The full text of the license can be found in the [LICENSE](https://github.com/DemianAdam/VidSpeeder/blob/main/LICENSE) file included in this repository.
 
 If you find VidSpeeder helpful, I would appreciate it if you would give me credit by linking to this GitHub repository.
