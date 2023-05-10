@@ -16,6 +16,7 @@ Once you have Tampermonkey installed, you can install VidSpeeder by following th
 1. Click [here]() to view the VidSpeeder script.
 2. Click the Install button at the top of the page.
 3. Tampermonkey will show you a confirmation page. Click the Install button to confirm.
+
 That's it! VidSpeeder should now be installed and ready to use.
 
 ## How to Use
