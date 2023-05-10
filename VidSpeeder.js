@@ -6,6 +6,7 @@
 // @author       Dnam
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
+// @license      GPL-3.0-only; https://www.gnu.org/licenses/gpl-3.0.txt
 // ==/UserScript==
 (function () {
     "use strict";
