@@ -1,15 +1,16 @@
 # VidSpeeder
 VidSpeeder is a Tampermonkey script that lets you increase or decrease the playback speed of YouTube videos beyond their standard limits. With VidSpeeder, you can watch your favorite YouTube content at lightning-fast speeds or in slow motion, with fine-grained control over the playback speed.
 
-How to Install
+## How to Install
 To use VidSpeeder, you will need to have Tampermonkey installed in your browser. Tampermonkey is a browser extension that allows you to run user scripts (like VidSpeeder) on specific web pages.
 
 To install Tampermonkey, follow the instructions for your specific browser:
 
-Google Chrome
-Mozilla Firefox
-Microsoft Edge
-Safari
+- [Google Chrome](https://www.tampermonkey.net/index.php?ext=dhdg&browser=chrome)
+- [Mozilla Firefox](https://www.tampermonkey.net/index.php?ext=dhdg&browser=firefox)
+- [Microsoft Edge](https://www.tampermonkey.net/index.php?ext=dhdg&browser=edge)
+- [Safari](https://www.tampermonkey.net/index.php?ext=dhdg&browser=safari)
+
 Once you have Tampermonkey installed, you can install VidSpeeder by following these steps:
 
 Click here to view the VidSpeeder script.
