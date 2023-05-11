@@ -1,95 +1,119 @@
 // ==UserScript==
-// @name         VidSpeeder
-// @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  VidSpeeder is a JavaScript script that enables you to increase or decrease the playback speed of YouTube videos beyond their standard limits.
+// @name         VidAmplifier
+// @namespace    https://github.com/DemianAdam/VidAmplifier
+// @version      0.2
+// @description  VidAmplifier is a user script designed to enhance the audio of videos on YouTube beyond their default maximum volume.
 // @author       Dnam
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @license      GPL-3.0-only
 // ==/UserScript==
+
 (function () {
-    "use strict";
-    document.addEventListener('yt-navigate-start', mainSpeedRate);
-    mainSpeedRate();
+    'use strict';
+    let audioCtx;
+    let source;
+    let gainNode;
+
+    let elementsReady = setInterval(()=>{
+        if (!source) {
+            let video = document.querySelector('video');
+            audioCtx = new AudioContext();
+            source = audioCtx.createMediaElementSource(video);
+            gainNode = audioCtx.createGain();
+            source.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            clearInterval(elementsReady);
+            elementsReady = true;
+        }
+    },1000)
+    /*document.addEventListener('yt-navigate-start', () => mainVolumeGain(gainNode));
+    mainVolumeGain(gainNode);*/
+    let ready = setInterval(()=> {
+        mainVolumeGain(gainNode,ready);
+    },1000);
 })();
 
-function mainSpeedRate() {
-    let video = document.querySelector('video');
-    let gRate = video.playbackRate;
-    addSpeedSpan();
-    addSpeedShorcutEvents();
-    initializeSpeedRateChangedEvent();
-    function speedUp() {
-        video.playbackRate += 0.25;
+function mainVolumeGain(gainNode,ready) {
+    if(document.querySelector("#videoVolumeSpan") || location.url == "https://www.youtube.com/" || !ready)
+    {
+        return;
     }
-    function speedDown() {
-        video.playbackRate -= 0.25;
+    clearInterval(ready);
+    let gain = gainNode.gain.value;
+    addVolumeSpan();
+    addVolumeShorcutEvents();
+    initializeGainChangedEvent();
+    function volumeUp() {
+        gainNode.gain.value += 0.25;
     }
-    function resetSpeed() {
-        video.playbackRate = 1;
+    function volumeDown() {
+        gainNode.gain.value -= 0.25;
     }
-    function speedChange(e) {
+    function resetVolume() {
+        gainNode.gain.value = 1;
+    }
+    function volumeChange(e) {
         let changed = false;
-        if (e.altKey && e.code === 'Period') {
-            speedUp()
+        if (e.altKey && e.code === "NumpadAdd") {
+            volumeUp();
             changed = true;
         }
-        else if (e.altKey && e.code === 'Comma') {
-            if (video.playbackRate >= 0.50) {
-                speedDown();
+        else if (e.altKey && e.code === "NumpadSubtract") {
+            if (gainNode.gain.value > 1) {
+                volumeDown();
             }
             changed = true;
         }
-        else if (e.altKey && e.code === "Slash") {
-            resetSpeed();
+        else if (e.altKey && e.code === "NumpadDivide") {
+            resetVolume();
             changed = true;
         }
-
         if (changed) {
             document.getElementById('movie_player').wakeUpControls();
         }
     }
-    function speedRateChangedEvent(OnSpeedRateChanges) {
-        let rate = video.playbackRate;
-        if (rate != gRate) {
-            OnSpeedRateChanges.forEach(element => {
-                element();
-            });
-            gRate = rate;
-        }
+    function addVolumeShorcutEvents() {
+        document.addEventListener('keyup', volumeChange);
     }
-    function updateSpeedRateSpan() {
-        let control = document.querySelector("#videoSpeedSpan");
-        control.innerHTML = "Speed: x" + video.playbackRate;
-    }
+
     function createSpan() {
         let control = document.createElement("span");
-        control.setAttribute("id", "videoSpeedSpan");
-        control.innerHTML = "Speed: x" + video.playbackRate;
+        control.setAttribute("id", "videoVolumeSpan");
+        control.innerHTML = "Volume: x" + gainNode.gain.value;
         control.style.border = "0.5px solid"
         control.style.padding = "0.5em";
         return control;
     }
+
     function createContainer(control) {
         let container = document.createElement("div");
         container.style.marginLeft = "2px";
         container.append(control);
         return container;
     }
-    function addSpeedSpan() {
-        if (!document.querySelector("#videoSpeedSpan")) {
+    function addVolumeSpan() {
+        if (!document.querySelector("#videoVolumeSpan")) {
+            let volumeArea = document.querySelector(".ytp-volume-area");
             let control = createSpan();
             let container = createContainer(control);
-            document.getElementsByClassName('ytp-left-controls')[0].append(container);
+            volumeArea.parentNode.insertBefore(container, volumeArea.nextSibling);
         }
     }
-    function addSpeedShorcutEvents() {
-        document.addEventListener('keyup', speedChange);
+    function updateGainSpan() {
+        let control = document.querySelector("#videoVolumeSpan");
+        control.innerHTML = "Volume: x" + gainNode.gain.value;
     }
-    function initializeSpeedRateChangedEvent() {
-        const OnSpeedRateChanges = [];
-        OnSpeedRateChanges.push(updateSpeedRateSpan);
-        setInterval(() => speedRateChangedEvent(OnSpeedRateChanges), 250);
+    function gainChangedEvent(functsOnGainChanges) {
+        if (gain != gainNode.gain.value) {
+            functsOnGainChanges.forEach(element => {
+                element();
+            });
+            gain = gainNode.gain.value;
+        }
+    }
+    function initializeGainChangedEvent() {
+        const OnGainChanged = [];
+        OnGainChanged.push(updateGainSpan);
+        setInterval(() => gainChangedEvent(OnGainChanged), 250);
     }
 }
