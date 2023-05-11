@@ -1,119 +1,101 @@
 // ==UserScript==
-// @name         VidAmplifier
-// @namespace    https://github.com/DemianAdam/VidAmplifier
+// @name         VidSpeeder
+// @namespace    https://github.com/DemianAdam/VidSpeeder
 // @version      0.2
-// @description  VidAmplifier is a user script designed to enhance the audio of videos on YouTube beyond their default maximum volume.
+// @description  VidSpeeder is a JavaScript script that enables you to increase or decrease the playback speed of YouTube videos beyond their standard limits.
 // @author       Dnam
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // ==/UserScript==
-
 (function () {
-    'use strict';
-    let audioCtx;
-    let source;
-    let gainNode;
-
-    let elementsReady = setInterval(()=>{
-        if (!source) {
-            let video = document.querySelector('video');
-            audioCtx = new AudioContext();
-            source = audioCtx.createMediaElementSource(video);
-            gainNode = audioCtx.createGain();
-            source.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            clearInterval(elementsReady);
-            elementsReady = true;
-        }
-    },1000)
-    /*document.addEventListener('yt-navigate-start', () => mainVolumeGain(gainNode));
-    mainVolumeGain(gainNode);*/
-    let ready = setInterval(()=> {
-        mainVolumeGain(gainNode,ready);
-    },1000);
+    "use strict";
+    setInterval(mainSpeedRate,1000);
 })();
 
-function mainVolumeGain(gainNode,ready) {
-    if(document.querySelector("#videoVolumeSpan") || location.url == "https://www.youtube.com/" || !ready)
+function mainSpeedRate() {
+    if(document.querySelector("#videoSpeedSpan") || location.url == "https://www.youtube.com/")
     {
         return;
     }
-    clearInterval(ready);
-    let gain = gainNode.gain.value;
-    addVolumeSpan();
-    addVolumeShorcutEvents();
-    initializeGainChangedEvent();
-    function volumeUp() {
-        gainNode.gain.value += 0.25;
+    console.log("wea");
+    let video = document.querySelector('video');
+    let gRate = video.playbackRate;
+    addSpeedShorcutEvents();
+    initializeSpeedRateChangedEvent();
+    addSpeedSpan();
+    function speedUp() {
+        video.playbackRate += 0.25;
     }
-    function volumeDown() {
-        gainNode.gain.value -= 0.25;
+    function speedDown() {
+        video.playbackRate -= 0.25;
     }
-    function resetVolume() {
-        gainNode.gain.value = 1;
+    function resetSpeed() {
+        video.playbackRate = 1;
     }
-    function volumeChange(e) {
+    function speedChange(e) {
         let changed = false;
-        if (e.altKey && e.code === "NumpadAdd") {
-            volumeUp();
+        if (e.altKey && e.code === 'Period') {
+            speedUp()
             changed = true;
         }
-        else if (e.altKey && e.code === "NumpadSubtract") {
-            if (gainNode.gain.value > 1) {
-                volumeDown();
+        else if (e.altKey && e.code === 'Comma') {
+            if(video.playbackRate >= 0.50){
+                speedDown();
             }
             changed = true;
         }
-        else if (e.altKey && e.code === "NumpadDivide") {
-            resetVolume();
+        else if (e.altKey && e.code === "Slash") {
+            resetSpeed();
             changed = true;
         }
+
         if (changed) {
             document.getElementById('movie_player').wakeUpControls();
         }
     }
-    function addVolumeShorcutEvents() {
-        document.addEventListener('keyup', volumeChange);
+    function speedRateChangedEvent(OnSpeedRateChanges) {
+        let rate = video.playbackRate;
+        if (rate != gRate) {
+            OnSpeedRateChanges.forEach(element => {
+                element();
+            });
+            gRate = rate;
+        }
     }
-
+    function updateSpeedRateSpan() {
+        let control = document.querySelector("#videoSpeedSpan");
+        control.innerHTML = "Speed: x" + video.playbackRate;
+    }
     function createSpan() {
         let control = document.createElement("span");
-        control.setAttribute("id", "videoVolumeSpan");
-        control.innerHTML = "Volume: x" + gainNode.gain.value;
+        control.setAttribute("id", "videoSpeedSpan");
+        control.innerHTML = "Speed: x" + video.playbackRate;
         control.style.border = "0.5px solid"
         control.style.padding = "0.5em";
         return control;
     }
-
     function createContainer(control) {
         let container = document.createElement("div");
         container.style.marginLeft = "2px";
         container.append(control);
         return container;
     }
-    function addVolumeSpan() {
-        if (!document.querySelector("#videoVolumeSpan")) {
-            let volumeArea = document.querySelector(".ytp-volume-area");
+    function addSpeedSpan() {
+
+        if (!document.querySelector("#videoSpeedSpan")) {
             let control = createSpan();
             let container = createContainer(control);
-            volumeArea.parentNode.insertBefore(container, volumeArea.nextSibling);
+            console.log("weaasdasdasda");
+            document.getElementsByClassName('ytp-left-controls')[0].append(container);
+            console.log("TESTASRSADSADA");
         }
     }
-    function updateGainSpan() {
-        let control = document.querySelector("#videoVolumeSpan");
-        control.innerHTML = "Volume: x" + gainNode.gain.value;
+    function addSpeedShorcutEvents() {
+        document.addEventListener('keyup', speedChange);
     }
-    function gainChangedEvent(functsOnGainChanges) {
-        if (gain != gainNode.gain.value) {
-            functsOnGainChanges.forEach(element => {
-                element();
-            });
-            gain = gainNode.gain.value;
-        }
-    }
-    function initializeGainChangedEvent() {
-        const OnGainChanged = [];
-        OnGainChanged.push(updateGainSpan);
-        setInterval(() => gainChangedEvent(OnGainChanged), 250);
+    function initializeSpeedRateChangedEvent() {
+        const OnSpeedRateChanges = [];
+        OnSpeedRateChanges.push(updateSpeedRateSpan);
+        setInterval(() => speedRateChangedEvent(OnSpeedRateChanges), 250);
     }
 }
